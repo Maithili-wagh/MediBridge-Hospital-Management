@@ -96,30 +96,39 @@ async function sendRegistrationOtp(
     return false;
   }
 
-  const transporter =
-    nodemailer.createTransport({
+ const transporter =
+  nodemailer.createTransport({
 
-      host:
-        process.env.SMTP_HOST,
+    service: "gmail",
 
-      port:
-        Number(
-          process.env.SMTP_PORT || 587
-        ),
+    auth: {
 
-      secure:
-        process.env.SMTP_SECURE
-        === "true",
+      user:
+        process.env.SMTP_USER,
 
-      auth: {
+      pass:
+        process.env.SMTP_PASS
+    },
 
-        user:
-          process.env.SMTP_USER,
+    connectionTimeout: 10000
+  });
 
-        pass:
-          process.env.SMTP_PASS
-      }
-    });
+transporter.verify((error, success) => {
+
+  if (error) {
+
+    console.log(
+      "SMTP ERROR:",
+      error
+    );
+
+  } else {
+
+    console.log(
+      "SMTP READY"
+    );
+  }
+});
 
   await transporter.sendMail({
 
