@@ -1,4 +1,4 @@
-export const API = import.meta.env.VITE_API_URL || "http://localhost:5000/api";
+export const API = import.meta.env.VITE_API_URL || "https://medibridge-hospital-management.onrender.com/api";
 
 export function localDateString(date = new Date()) {
   const year = date.getFullYear();
