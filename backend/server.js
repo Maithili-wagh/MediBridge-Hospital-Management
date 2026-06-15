@@ -16,35 +16,12 @@ dotenv.config();
 
 const app = express();
 const basePort = Number(process.env.PORT) || 5000;
-const allowedOrigins = [
-  process.env.CLIENT_URL,
-  "http://localhost:5173",
-  "http://localhost:5174",
-  "http://localhost:5175",
-  "http://127.0.0.1:5173",
-  "http://127.0.0.1:5174",
-  "http://127.0.0.1:5175"
-].filter(Boolean);
-
-const isAllowedOrigin = (origin) => {
-  if (!origin || allowedOrigins.includes(origin)) return true;
-
-  try {
-    const { hostname, protocol } = new URL(origin);
-    return protocol === "http:" && ["localhost", "127.0.0.1"].includes(hostname);
-  } catch {
-    return false;
-  }
-};
 
 app.use(cors({
-  origin(origin, callback) {
-    if (isAllowedOrigin(origin)) {
-      return callback(null, true);
-    }
-    return callback(new Error("Not allowed by CORS"));
-  }
+  origin: true,
+  credentials: true
 }));
+
 app.use(express.json({ limit: "10mb" }));
 app.use(morgan("dev"));
 
