@@ -99,7 +99,7 @@ async function sendRegistrationOtp(
  const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST,
   port: Number(process.env.SMTP_PORT),
-  secure: process.env.SMTP_SECURE === "true",
+  secure: false,
 
   auth: {
     user: process.env.SMTP_USER,
@@ -107,8 +107,11 @@ async function sendRegistrationOtp(
   },
 
   connectionTimeout: 10000,
-});
 
+  tls: {
+    rejectUnauthorized: false,
+  },
+});
 transporter.verify((error, success) => {
 
   if (error) {
