@@ -10,7 +10,6 @@ import MedicineOrder from "./src/models/MedicineOrder.js";
 dotenv.config();
 await connectDB();
 
-await mongoose.connection.dropDatabase();
 
 const doctors = await Doctor.insertMany([
   { name: "Dr. Neha Sharma", email: "neha@medibridge.in", specialty: "Cardiologist", degree: "MBBS, MD", hospital: "Heart Care Hospital", city: "Delhi", experience: 8, fee: 700, rating: 4.8, bio: "Heart rhythm and hypertension specialist." },

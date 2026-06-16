@@ -116,6 +116,24 @@ export default function PatientPanel({ user, doctors, token, authHeaders, requir
       setMessage("Please select today or a future date.");
       return;
     }
+    const selectedDate = new Date(form.date);
+const currentDate = new Date();
+
+const isToday =
+  selectedDate.toDateString() === currentDate.toDateString();
+
+if (isToday) {
+
+  const selectedMinutes = minutesFromTime(form.time);
+
+  const currentMinutes =
+    currentDate.getHours() * 60 + currentDate.getMinutes();
+
+  if (selectedMinutes <= currentMinutes) {
+    setMessage("Cannot book past time slots.");
+    return;
+  }
+}
     if (alreadyBookedThisDoctorToday || alreadyBookedThisSlot) {
       setMessage("You already have an appointment with this doctor on the selected date.");
       return;
