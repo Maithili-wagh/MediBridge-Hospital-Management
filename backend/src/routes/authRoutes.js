@@ -2,7 +2,7 @@ import express from "express";
 import RegistrationOtp from "../models/RegistrationOtp.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import brevo from "@getbrevo/brevo";
+import * as brevo from "@getbrevo/brevo";
 import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
 
