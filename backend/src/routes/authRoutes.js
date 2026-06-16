@@ -2,17 +2,17 @@ import express from "express";
 import RegistrationOtp from "../models/RegistrationOtp.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import * as brevo from "@getbrevo/brevo";
+import SibApiV3Sdk from "sib-api-v3-sdk";
 import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
 
 const router = express.Router();
-const apiInstance = new brevo.TransactionalEmailsApi();
+const defaultClient = SibApiV3Sdk.ApiClient.instance;
 
-apiInstance.setApiKey(
-  brevo.TransactionalEmailsApiApiKeys.apiKey,
-  process.env.BREVO_API_KEY
-);
+const apiKey = defaultClient.authentications["api-key"];
+apiKey.apiKey = process.env.BREVO_API_KEY;
+
+const apiInstance = new SibApiV3Sdk.TransactionalEmailsApi();
 
 function createToken(user) {
   return jwt.sign(
