@@ -2,11 +2,17 @@ import express from "express";
 import RegistrationOtp from "../models/RegistrationOtp.js";
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import nodemailer from "nodemailer";
+import brevo from "@getbrevo/brevo";
 import User from "../models/User.js";
 import Doctor from "../models/Doctor.js";
 
 const router = express.Router();
+const apiInstance = new brevo.TransactionalEmailsApi();
+
+apiInstance.setApiKey(
+  brevo.TransactionalEmailsApiApiKeys.apiKey,
+  process.env.BREVO_API_KEY
+);
 
 function createToken(user) {
   return jwt.sign(
@@ -82,69 +88,45 @@ function smtpReady() {
   );
 }
 
-async function sendRegistrationOtp(
-  email,
-  otp
-) {
+async function sendRegistrationOtp(email, otp) {
 
-  if (!smtpReady()) {
+  try {
 
-    console.log(
-      `Registration OTP for ${email}: ${otp}`
-    );
+    const sendSmtpEmail = {
+
+      sender: {
+        name: "MediBridge",
+        email: "maithiliwagh1987@gmail.com",
+      },
+
+      to: [
+        {
+          email,
+        },
+      ],
+
+      subject: "MediBridge Registration OTP",
+
+      htmlContent: `
+        <h2>MediBridge OTP Verification</h2>
+        <p>Your OTP is:</p>
+        <h1>${otp}</h1>
+        <p>Valid for 10 minutes.</p>
+      `,
+    };
+
+    await apiInstance.sendTransacEmail(sendSmtpEmail);
+
+    console.log("OTP email sent successfully");
+
+    return true;
+
+  } catch (error) {
+
+    console.log("BREVO EMAIL ERROR:", error);
 
     return false;
   }
-
- const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT),
-  secure: false,
-
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
-
-  connectionTimeout: 10000,
-
-  tls: {
-    rejectUnauthorized: false,
-  },
-});
-transporter.verify((error, success) => {
-
-  if (error) {
-
-    console.log(
-      "SMTP ERROR:",
-      error
-    );
-
-  } else {
-
-    console.log(
-      "SMTP READY"
-    );
-  }
-});
-
-  await transporter.sendMail({
-
-    from:
-      process.env.SMTP_FROM
-      || process.env.SMTP_USER,
-
-    to: email,
-
-    subject:
-      "MediBridge Registration OTP",
-
-    text:
-      `Your MediBridge OTP is ${otp}. Valid for 10 minutes.`
-  });
-
-  return true;
 }
 
 router.post(
