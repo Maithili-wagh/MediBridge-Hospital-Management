@@ -9,7 +9,12 @@ import MedicineOrder from "./src/models/MedicineOrder.js";
 
 dotenv.config();
 await connectDB();
+console.log(mongoose.connection.name);
 
+await User.deleteMany({});
+await Doctor.deleteMany({});
+await Appointment.deleteMany({});
+await MedicineOrder.deleteMany({});
 
 const doctors = await Doctor.insertMany([
   { name: "Dr. Neha Sharma", email: "neha@medibridge.in", specialty: "Cardiologist", degree: "MBBS, MD", hospital: "Heart Care Hospital", city: "Delhi", experience: 8, fee: 700, rating: 4.8, bio: "Heart rhythm and hypertension specialist." },
