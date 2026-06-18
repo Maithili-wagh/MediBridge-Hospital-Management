@@ -36,7 +36,7 @@ export default function Home({ doctors, doctorError, requireLogin, setActive }) 
           <div className="portrait">Dr</div>
         </div>
       </section>
-      <section className="services">
+      <section id="appointments" className="services">
         <h2>Our Services</h2>
         <div className="service-grid">
           {serviceActions.map(([Icon, title, text, action]) => (
@@ -48,8 +48,8 @@ export default function Home({ doctors, doctorError, requireLogin, setActive }) 
           ))}
         </div>
       </section>
-      <section className="featured">
-        <h2>Available Specialists</h2>
+      <section id="doctors" className="featured">
+      <h2>Available Specialists</h2>
         {doctorError && <p className="notice">{doctorError}</p>}
         {!doctorError && doctors.length === 0 && <p className="notice">No doctors found in MongoDB yet. Register a doctor or run the seed script.</p>}
         <div className="doctor-strip">
